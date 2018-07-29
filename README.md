@@ -35,19 +35,21 @@ class MyClass {
 ```js
 const coClass = require('co-class');
 
-const MyClass = coClass( class {
+class MyClass {
   *doSomethingAsync(a, b, c) {
     const res = yield Promise.resolve(a * b * c);
     return res;
   }
-} );
+}
+
+coClass( MyClass );
 ```
 
 ### How it works
 
 All class methods (both instance methods and static methods) which are generator functions are converted into co-routines.
 
-Co-routines are equivalent to `async/await` syntax. Wrapping is performed using [co-simple](https://www.npmjs.com/package/co-simple).
+Co-routines are equivalent to `async/await` syntax. Co-routine wrapping is performed using [co-simple](https://www.npmjs.com/package/co-simple).
 
 `super` also works as you'd expect for calling methods on a super-class.
 
@@ -56,16 +58,16 @@ Co-routines are equivalent to `async/await` syntax. Wrapping is performed using 
 To wrap only static methods:
 
 ```js
-coClass.static( klass );
+coClass.static( MyClass );
 ```
 
 To wrap on instance methods:
 
 ```js
-coClass.instance( klass );
+coClass.instance( MyClass );
 ```
 
-Calling `coClass( klass )` is equivalent to calling both the above methods.
+Calling `coClass( MyClass )` is equivalent to calling both the above methods.
 
 ## Tests
 
