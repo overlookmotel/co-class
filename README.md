@@ -69,6 +69,15 @@ coClass.instance( MyClass );
 
 Calling `coClass( MyClass )` is equivalent to calling both the above methods.
 
+### Using an alternative wrapper
+
+Just provide it as an option:
+
+```js
+const co = require('co-bluebird');
+coClass( myClass, { wrapper: co.wrap } );
+```
+
 ## Tests
 
 Use `npm test` to run the tests. Use `npm run cover` to check coverage.

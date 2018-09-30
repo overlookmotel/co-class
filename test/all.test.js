@@ -9,6 +9,7 @@
 const chai = require('chai'),
 	{expect} = chai,
 	chaiAsPromised = require('chai-as-promised'),
+	Bluebird = require('bluebird'),
 	coClass = require('../lib/');
 
 // Init
@@ -266,6 +267,43 @@ describe('coClass.instance()', function() {
 		it('static properties', function() {
 			const {Klass} = this;
 			expect(Klass.staticProp).to.equal(34);
+		});
+	});
+});
+
+describe('wrapper option', function() {
+	beforeEach(function() {
+		const Klass = makeClass();
+		this.originalKlass = Klass;
+		this.Klass = coClass(Klass, {wrapper: Bluebird.coroutine});
+		this.instance = new Klass();
+	});
+
+	describe('wraps instance methods with specified wrapper', function() {
+		it('to function', function() {
+			const {instance} = this;
+			expect(instance.asyncInstanceMethod).to.be.a('function');
+		});
+
+		it('function returns promise', function() {
+			const {instance} = this;
+			const p = instance.asyncInstanceMethod(3, 4);
+			expect(p).to.be.instanceof(Bluebird);
+			return expect(p).to.eventually.equal(7);
+		});
+	});
+
+	describe('wraps static methods with specified wrapper', function() {
+		it('to function', function() {
+			const {Klass} = this;
+			expect(Klass.asyncStaticMethod).to.be.a('function');
+		});
+
+		it('function returns promise', function() {
+			const {Klass} = this;
+			const p = Klass.asyncStaticMethod(3, 4);
+			expect(p).to.be.instanceof(Bluebird);
+			return expect(p).to.eventually.equal(7);
 		});
 	});
 });
